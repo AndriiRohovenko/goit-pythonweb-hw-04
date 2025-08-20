@@ -3,14 +3,6 @@ from argparse import ArgumentParser
 from aiopath import AsyncPath
 import shutil
 
-Parser = ArgumentParser(
-    prog="hw-04",
-    description="Program to demonstrate asynchronous programming with asyncio",
-)
-
-Parser.add_argument("source_folder", type=str, help="Path to the source folder")
-Parser.add_argument("output_folder", type=str, help="Path to the output folder")
-
 
 async def read_folder(path: AsyncPath):
     try:
@@ -49,6 +41,14 @@ async def copy_file(entries: list, output_folder: AsyncPath):
 
 
 async def main():
+    Parser = ArgumentParser(
+        prog="hw-04",
+        description="Program to demonstrate asynchronous programming with asyncio",
+    )
+
+    Parser.add_argument("source_folder", type=str, help="Path to the source folder")
+    Parser.add_argument("output_folder", type=str, help="Path to the output folder")
+
     args = Parser.parse_args()
     aSource_folder = AsyncPath(args.source_folder)
     aOutput_folder = AsyncPath(args.output_folder)
