@@ -2,20 +2,21 @@ import asyncio
 from argparse import ArgumentParser
 from aiopath import AsyncPath
 import shutil
+from src.logger import logger
 
 
 async def read_folder(path: AsyncPath):
     try:
         if not await path.exists():
-            print(f"Path {path} does not exist.")
+            logger.info(f"Path {path} does not exist.")
             return None
         if not await path.is_dir():
-            print(f"Path {path} is not a directory.")
+            logger.info(f"Path {path} is not a directory.")
             return None
 
         return [entry async for entry in path.iterdir()]
     except Exception as e:
-        print(f"Error reading {path}: {e}")
+        logger.error(f"Error reading {path}: {e}")
         return None
 
 
@@ -35,9 +36,9 @@ async def copy_file(entries: list, output_folder: AsyncPath):
                 # COPY
                 await asyncio.to_thread(shutil.copy2, entry, target_folder)
 
-                print(f"Processing file: {entry} -> {target_folder}")
+                logger.info(f"Processing file: {entry} -> {target_folder}")
     except Exception as e:
-        print(f"Error processing folders: {e}")
+        logger.error(f"Error processing folders: {e}")
 
 
 async def main():
@@ -56,7 +57,7 @@ async def main():
     print(f"Output folder: {args.output_folder}")
     source_folder_entries = await read_folder(aSource_folder)
     if source_folder_entries is None:
-        print("No data found in the source folder.")
+        logger.info("No data found in the source folder.")
         return
     await copy_file(source_folder_entries, aOutput_folder)
 
